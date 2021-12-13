@@ -38,26 +38,6 @@
   opacity: 1;
 }
 
-.todo-component .list-button-row {
-  display: flex;
-  margin: 10px;
-  flex-direction: row;
-}
-
-.todo-component .list-button-row__button {
-  display: flex;
-  margin: 5px;
-  padding: 5px;
-  justify-content: center;
-  align-items: center;
-  font-size: 20px;
-  cursor: pointer;
-}
-
-.todo-component .list-button-row__button.list-button-row__button--selected {
-  background-color: #9146ea;
-}
-
 .todo-component .todo-component__todo-item{
   display: flex;
   margin-bottom: 10px;

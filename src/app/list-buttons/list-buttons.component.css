@@ -1,0 +1,19 @@
+.list-button-row {
+  display: flex;
+  margin: 10px;
+  flex-direction: row;
+}
+
+.list-button-row__button {
+  display: flex;
+  margin: 5px;
+  padding: 5px;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.list-button-row__button.list-button-row__button--selected {
+  background-color: #9146ea;
+}
