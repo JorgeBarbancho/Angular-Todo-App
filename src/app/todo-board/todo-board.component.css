@@ -25,17 +25,13 @@
 }
 
 .todo-component .todo-component__validation-warning {
-  position: absolute;
-  visibility: hidden;
-  opacity: 0;
+  display: none;
   color: red;
   font-size: 18px;
 }
 
-.todo-component .todo-component__validation-warning.todo-component__validation-warning--shown {
-  position: relative;
-  visibility: visible;
-  opacity: 1;
+.todo-component--input-error .todo-component__validation-warning {
+  display: block;
 }
 
 .todo-component .todo-component__todo-item{
@@ -48,16 +44,17 @@
   background-color: #f2f2f2;
   border-radius: 10px;
 }
-.todo-component .todo-component__todo-item.todo-component__todo-item--shown {
-  position: relative;
-  visibility: visible;
-  opacity: 1;
+
+.todo-component--showing-all .todo-component__todo-item {
+  display: flex;
 }
 
-.todo-component .todo-component__todo-item.todo-component__todo-item--hidden {
-  position: absolute;
-  visibility: hidden;
-  opacity: 0;
+.todo-component--showing-completed .todo-component__todo-item--completed {
+  display: flex;
+}
+
+.todo-component--showing-pending .todo-component__todo-item--pending {
+  display: flex;
 }
 
 .todo-component .todo-component__todo-item-text {

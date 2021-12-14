@@ -3,14 +3,32 @@
     <h3 class="todo-component__header">Todo App</h3>
   </div>
   <form action="#" class="todo-component__input-form">
-    <input class="todo-component__input" type="text" placeholder="Add your new todo">
-    <button class="btn btn__add-btn" type="submit">+</button>
+    <input class="todo-component__input" type="text" placeholder="Add your new todo" #newTask>
+    <button class="btn" type="submit" (click)="addTask($event, newTask.value); newTask.value=''">+</button>
   </form>
   <div class="todo-component__validation-warning">Enter some Text!</div>
   <app-list-buttons></app-list-buttons>
-  <div class="todo-component__todo-list"></div>
+  <div
+    [ngClass]="{
+      'todo-component__todo-list': true,
+      'todo-component--showing-all': showingAll,
+      'todo-component--showing-pending': showingPending,
+      'todo-component--showing-completed': showingCompleted}"
+    *ngFor="let task of tasks">
+    <label
+      [ngClass]="{
+        'todo-component__todo-item': true,
+        'todo-component__todo-item--pending': task.pending,
+        'todo-component__todo-item--completed': !task.pending}">
+      <input type="checkbox" (click)="toggleTask(task)">
+      <div class="todo-component__todo-item-text">{{task.text}}</div>
+      <button class="todo-component__trash-btn" (click)="removeTask(task)">
+        <fa-icon [icon]="faTrash"></fa-icon>
+      </button>
+    </label>
+  </div>
   <div class="todo-component__pending-row">
-    <p class="todo-component__pending-text">You have 0 pending tasks</p>
-    <button class="btn btn__clear-btn">Clear All</button>
+    <p class="todo-component__pending-text">You have {{pendingTasksCount}} pending {{pendingTasksText}}</p>
+    <button class="btn">Clear All</button>
   </div>
 </div>
