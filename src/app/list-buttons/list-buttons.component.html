@@ -1,11 +1,26 @@
-<div class="list-button-row">
-  <button class="list-button-row__button list-button-row__button--show-all list-button-row__button--selected">
-    <fa-icon [icon]="faTh"></fa-icon>
-  </button>
-  <button class="list-button-row__button list-button-row__button--show-completed">
-    <fa-icon [icon]="faTasks"></fa-icon>
-  </button>
-  <button class="list-button-row__button list-button-row__button--show-pending">
-    <fa-icon [icon]="falList"></fa-icon>
-  </button>
-</div>
+<ul class="list-button-row">
+  <li>
+    <button
+      class="list-button-row__button list-button-row__button--show-all"
+      [ngClass]="{'list-button-row__button--selected': showingAll}"
+      (click)="onShowAllClick()">
+      <fa-icon [icon]="faTh"></fa-icon>
+    </button>
+  </li>
+  <li>
+    <button
+      class="list-button-row__button list-button-row__button--show-completed"
+      [ngClass]="{'list-button-row__button--selected': showingCompleted}"
+      (click)="onShowCompletedClick()">
+      <fa-icon [icon]="faTasks"></fa-icon>
+    </button>
+  </li>
+  <li>
+    <button
+      class="list-button-row__button list-button-row__button--show-pending"
+      [ngClass]="{'list-button-row__button--selected': showingPending}"
+      (click)="onShowPendingClick()">
+      <fa-icon [icon]="faList"></fa-icon>
+    </button>
+  </li>
+</ul>

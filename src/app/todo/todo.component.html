@@ -1,4 +1,11 @@
-<div class="todo-component">
+<div
+  class="todo-component"
+  [ngClass]="{
+      'todo-component--input-error': showWarning,
+      'todo-component--showing-all': showingAll,
+      'todo-component--showing-pending': showingPending,
+      'todo-component--showing-completed': showingCompleted
+    }">
   <div>
     <h3 class="todo-component__header">Todo App</h3>
   </div>
@@ -7,19 +14,20 @@
     <button class="btn" type="submit" (click)="addTask($event, newTask.value); newTask.value=''">+</button>
   </form>
   <div class="todo-component__validation-warning">Enter some Text!</div>
-  <app-list-buttons></app-list-buttons>
-  <div
-    [ngClass]="{
-      'todo-component__todo-list': true,
-      'todo-component--showing-all': showingAll,
-      'todo-component--showing-pending': showingPending,
-      'todo-component--showing-completed': showingCompleted}"
-    *ngFor="let task of tasks">
+  <app-list-buttons
+    [showAll]="showAll"
+    [showCompleted]="showCompleted"
+    [showPending]="showPending"
+  >
+  </app-list-buttons>
+  <div class="todo-component__todo-list">
     <label
+      *ngFor="let task of tasks"
+      class="todo-component__todo-item"
       [ngClass]="{
-        'todo-component__todo-item': true,
-        'todo-component__todo-item--pending': task.pending,
-        'todo-component__todo-item--completed': !task.pending}">
+          'todo-component__todo-item--pending': task.pending,
+          'todo-component__todo-item--completed': !task.pending
+          }">
       <input type="checkbox" (click)="toggleTask(task)">
       <div class="todo-component__todo-item-text">{{task.text}}</div>
       <button class="todo-component__trash-btn" (click)="removeTask(task)">
@@ -29,6 +37,6 @@
   </div>
   <div class="todo-component__pending-row">
     <p class="todo-component__pending-text">You have {{pendingTasksCount}} pending {{pendingTasksText}}</p>
-    <button class="btn">Clear All</button>
+    <button class="btn" (click)="clearAll()">Clear All</button>
   </div>
 </div>

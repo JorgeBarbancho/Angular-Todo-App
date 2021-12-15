@@ -1,10 +1,12 @@
 .list-button-row {
   display: flex;
   margin: 10px;
+  padding: 0;
   flex-direction: row;
+  list-style-type: none;
 }
 
-.list-button-row__button {
+.list-button-row .list-button-row__button {
   display: flex;
   margin: 5px;
   padding: 5px;
@@ -14,6 +16,6 @@
   cursor: pointer;
 }
 
-.list-button-row__button.list-button-row__button--selected {
+.list-button-row .list-button-row__button.list-button-row__button--selected {
   background-color: #9146ea;
 }
