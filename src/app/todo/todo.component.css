@@ -35,8 +35,13 @@
   display: block;
 }
 
-.todo-component .todo-component__todo-item{
-  display: flex;
+.todo-component .todo-component__todo-list{
+  padding: 0;
+  list-style-type: none;
+}
+
+.todo-component .todo-component__todo-item {
+  display: none;
   margin-bottom: 10px;
   padding-left: 20px;
   flex-direction: row;

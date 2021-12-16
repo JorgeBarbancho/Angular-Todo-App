@@ -1,46 +1,22 @@
-import {Component, Input} from '@angular/core';
-import {faList, faTasks, faTh} from '@fortawesome/free-solid-svg-icons';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ListButton } from '../list-button';
 
 @Component({
   selector: 'app-list-buttons',
   templateUrl: './list-buttons.component.html',
-  styleUrls: ['./list-buttons.component.css']
+  styleUrls: ['./list-buttons.component.css'],
 })
 export class ListButtonsComponent {
+  @Input()
+  public buttons: ListButton[] = [];
 
-  // Readonly view variables
-  public readonly faTh = faTh;
-  public readonly faTasks = faTasks;
-  public readonly faList = faList;
+  @Output()
+  public onButtonClick = new EventEmitter<number>();
 
-  // State
-  public showingAll: boolean = true;
-  public showingCompleted: boolean = false;
-  public showingPending: boolean = false;
-
-  @Input() public showAll: any;
-  @Input() public showCompleted: any;
-  @Input() public showPending: any;
-
-  public onShowAllClick(): void {
-    this.showAll();
-    this.showingAll = true;
-    this.showingCompleted = false;
-    this.showingPending = false;
+  public onClick(clickedButton: ListButton): void {
+    this.buttons.map((button) => {
+      button.selected = clickedButton === button;
+    });
+    this.onButtonClick.emit(this.buttons.indexOf(clickedButton));
   }
-
-  public onShowCompletedClick(): void {
-    this.showCompleted();
-    this.showingAll = false;
-    this.showingCompleted = true;
-    this.showingPending = false;
-  }
-
-  public onShowPendingClick(): void {
-    this.showPending();
-    this.showingAll = false;
-    this.showingCompleted = false;
-    this.showingPending = true;
-  }
-
 }

@@ -15,26 +15,26 @@
   </form>
   <div class="todo-component__validation-warning">Enter some Text!</div>
   <app-list-buttons
-    [showAll]="showAll"
-    [showCompleted]="showCompleted"
-    [showPending]="showPending"
+    [buttons]="buttons"
+    (onButtonClick)="onButtonClick($event)"
   >
   </app-list-buttons>
-  <div class="todo-component__todo-list">
-    <label
-      *ngFor="let task of tasks"
-      class="todo-component__todo-item"
-      [ngClass]="{
+  <ul class="todo-component__todo-list">
+    <li *ngFor="let task of tasks">
+      <label
+        class="todo-component__todo-item"
+        [ngClass]="{
           'todo-component__todo-item--pending': task.pending,
           'todo-component__todo-item--completed': !task.pending
           }">
-      <input type="checkbox" (click)="toggleTask(task)">
-      <div class="todo-component__todo-item-text">{{task.text}}</div>
-      <button class="todo-component__trash-btn" (click)="removeTask(task)">
-        <fa-icon [icon]="faTrash"></fa-icon>
-      </button>
-    </label>
-  </div>
+        <input type="checkbox" (click)="toggleTask(task)">
+        <div class="todo-component__todo-item-text">{{task.text}}</div>
+        <button class="todo-component__trash-btn" (click)="removeTask(task)">
+          <fa-icon [icon]="faTrash"></fa-icon>
+        </button>
+      </label>
+    </li>
+  </ul>
   <div class="todo-component__pending-row">
     <p class="todo-component__pending-text">You have {{pendingTasksCount}} pending {{pendingTasksText}}</p>
     <button class="btn" (click)="clearAll()">Clear All</button>

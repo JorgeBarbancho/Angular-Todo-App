@@ -1,14 +1,14 @@
-import {Component} from '@angular/core';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
-import {Task} from '../task';
+import { Component } from '@angular/core';
+import { faList, faTasks, faTh, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { Task } from '../task';
+import { ListButton } from '../list-button';
 
 @Component({
-  selector: 'app-todo-board',
+  selector: 'app-todo',
   templateUrl: './todo.component.html',
-  styleUrls: ['./todo.component.css']
+  styleUrls: ['./todo.component.css'],
 })
 export class TodoComponent {
-
   // Readonly view variables
   public readonly faTrash = faTrash;
 
@@ -23,6 +23,13 @@ export class TodoComponent {
   public pendingTasksCount: number = 0;
   public pendingTasksText: string = 'tasks';
 
+  // List buttons config
+  public buttons: ListButton[] = [
+    { icon: faTh, selected: true },
+    { icon: faTasks, selected: false },
+    { icon: faList, selected: false },
+  ];
+
   // Internal state
   private idCounter: number = 1;
 
@@ -35,7 +42,7 @@ export class TodoComponent {
       this.tasks.push({
         id: this.idCounter,
         pending: true,
-        text: newTask
+        text: newTask,
       });
       this.idCounter++;
       this.showWarning = false;
@@ -54,42 +61,32 @@ export class TodoComponent {
   }
 
   public removeTask(task: Task): void {
-    this.tasks = this.tasks.filter(item => item.id !== task.id);
+    this.tasks = this.tasks.filter((item) => item.id !== task.id);
     this.updatePendingTasksText();
   }
 
-  public showAll = () => {
-
-    this.showingAll = true;
-    this.showingPending = false;
-    this.showingCompleted = false;
-    console.log(this.showingAll)
-    console.log(this.showingCompleted)
-    console.log(this.showingPending)
-  }
-
-  public showCompleted(): void {
-
-    this.showingAll = false;
-    this.showingCompleted = true;
-    this.showingPending = false;
-    console.log(this.showingAll)
-    console.log(this.showingCompleted)
-    console.log(this.showingPending)
-  }
-
-  public showPending(): void {
-
-    this.showingAll = false;
-    this.showingPending = true;
-    this.showingCompleted = false;
-    console.log(this.showingAll)
-    console.log(this.showingCompleted)
-    console.log(this.showingPending)
+  public onButtonClick(buttonIdx: number): void {
+    switch (buttonIdx) {
+      case 0:
+        this.showingAll = true;
+        this.showingCompleted = false;
+        this.showingPending = false;
+        break;
+      case 1:
+        this.showingAll = false;
+        this.showingCompleted = true;
+        this.showingPending = false;
+        break;
+      case 2:
+        this.showingAll = false;
+        this.showingCompleted = false;
+        this.showingPending = true;
+        break;
+    }
   }
 
   private updatePendingTasksText(): void {
-    this.pendingTasksCount = this.tasks.filter(task => task.pending).length
+    this.pendingTasksCount = this.tasks.filter((task) => task.pending).length;
     this.pendingTasksText = this.pendingTasksCount === 1 ? 'task' : 'tasks';
   }
 }

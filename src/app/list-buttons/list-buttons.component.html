@@ -1,26 +1,10 @@
 <ul class="list-button-row">
-  <li>
+  <li *ngFor="let listButton of buttons">
     <button
-      class="list-button-row__button list-button-row__button--show-all"
-      [ngClass]="{'list-button-row__button--selected': showingAll}"
-      (click)="onShowAllClick()">
-      <fa-icon [icon]="faTh"></fa-icon>
-    </button>
-  </li>
-  <li>
-    <button
-      class="list-button-row__button list-button-row__button--show-completed"
-      [ngClass]="{'list-button-row__button--selected': showingCompleted}"
-      (click)="onShowCompletedClick()">
-      <fa-icon [icon]="faTasks"></fa-icon>
-    </button>
-  </li>
-  <li>
-    <button
-      class="list-button-row__button list-button-row__button--show-pending"
-      [ngClass]="{'list-button-row__button--selected': showingPending}"
-      (click)="onShowPendingClick()">
-      <fa-icon [icon]="faList"></fa-icon>
+      class="list-button-row__button"
+      [ngClass]="{'list-button-row__button--selected': listButton.selected}"
+      (click)="onClick(listButton)">
+      <fa-icon [icon]="listButton.icon"></fa-icon>
     </button>
   </li>
 </ul>
