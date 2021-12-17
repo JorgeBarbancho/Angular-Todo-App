@@ -66,6 +66,9 @@ export class TodoComponent {
   }
 
   public onButtonClick(buttonIdx: number): void {
+    this.buttons.map((button, idx) => {
+      button.selected = buttonIdx === idx;
+    });
     switch (buttonIdx) {
       case 0:
         this.showingAll = true;

@@ -14,9 +14,6 @@ export class ListButtonsComponent {
   public onButtonClick = new EventEmitter<number>();
 
   public onClick(clickedButton: ListButton): void {
-    this.buttons.map((button) => {
-      button.selected = clickedButton === button;
-    });
     this.onButtonClick.emit(this.buttons.indexOf(clickedButton));
   }
 }
