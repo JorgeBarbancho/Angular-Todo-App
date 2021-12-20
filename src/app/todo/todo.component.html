@@ -11,7 +11,7 @@
   </div>
   <form action="#" class="todo-component__input-form">
     <input class="todo-component__input" type="text" placeholder="Add your new todo" #newTask>
-    <button class="btn" type="submit" (click)="addTask($event, newTask.value); newTask.value=''">+</button>
+    <button class="btn btn--add" type="submit" (click)="addTask($event, newTask.value); newTask.value=''">+</button>
   </form>
   <div class="todo-component__validation-warning">Enter some Text!</div>
   <app-list-buttons
