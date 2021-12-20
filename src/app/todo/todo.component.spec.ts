@@ -1,7 +1,7 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { TodoComponent } from './todo.component';
 import { Task } from '../task';
-import { Component, EventEmitter, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
 import { By } from '@angular/platform-browser';
 
 @Component({
@@ -13,7 +13,7 @@ class MockListButtons {
   public onButtonClick = new EventEmitter<number>();
 
   public onClick(): void {
-    this.onButtonClick.emit(2);
+    this.onButtonClick.emit(1);
   }
 }
 
@@ -23,10 +23,14 @@ describe('TodoBoardComponent', () => {
   let dummyTask: Task;
   let mockListButtons: MockListButtons;
 
+  function getTaskCount() {
+    return fixture.debugElement.queryAll(By.css('.todo-component__todo-item')).length;
+  }
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TodoComponent, MockListButtons],
-      schemas: [NO_ERRORS_SCHEMA],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 
@@ -46,47 +50,86 @@ describe('TodoBoardComponent', () => {
   });
 
   it('Add button should call addTask method', fakeAsync(() => {
-    spyOn(component, 'addTask');
-    const btn = fixture.debugElement.query(By.css('.btn--add'));
-    btn.triggerEventHandler('click', null);
+    //Given
+    const btn = fixture.debugElement.nativeElement.querySelector('.btn--add');
+    const todoInput = fixture.debugElement.query(By.css('.todo-component__input'));
+    const inputEl = todoInput.nativeElement;
+    inputEl.value = 'testValue';
+    expect(getTaskCount()).toBe(0);
+
+    //When
+    btn.click();
     tick();
     fixture.detectChanges();
-    expect(component.addTask).toHaveBeenCalled();
+
+    //Then
+    expect(getTaskCount()).toBe(1);
+    expect(component.tasks[0].text).toBe('testValue');
   }));
 
-  it('Add button should add a task', () => {
+  it('Clear all button clear all tasks', () => {
+    //Given
     component.addTask(new Event('click'), dummyTask.text);
-    expect(component.tasks.length).toBe(1);
-  });
+    fixture.detectChanges();
+    expect(getTaskCount()).toBe(1);
 
-  it('Clear all button should create a task', () => {
-    component.addTask(new Event('click'), dummyTask.text);
+    //When
     component.clearAll();
+    fixture.detectChanges();
+
+    //Then
+    expect(getTaskCount()).toBe(0);
     expect(component.tasks.length).toBe(0);
   });
 
   it('Checkbox should toggle task completion', () => {
+    //Given
     component.addTask(new Event('click'), dummyTask.text);
-    expect(dummyTask.pending).toBeTrue();
-    component.toggleTask(dummyTask);
-    expect(dummyTask.pending).toBeFalse();
-    component.toggleTask(dummyTask);
-    expect(dummyTask.pending).toBeTrue();
+    fixture.detectChanges();
+    expect(getTaskCount()).toBe(1);
+    const checkbox = fixture.debugElement.nativeElement.querySelector('input[type=checkbox]');
+    expect(component.tasks[0].pending).toBeTrue();
+
+    //When
+    checkbox.click();
+
+    //Then
+    expect(component.tasks[0].pending).toBeFalse();
+    checkbox.click();
+    expect(component.tasks[0].pending).toBeTrue();
   });
 
   it('Trash button should remove a task', () => {
+    //Given
     component.addTask(new Event('click'), dummyTask.text);
-    expect(component.tasks.length).toBe(1);
-    component.removeTask(dummyTask);
-    expect(component.tasks.length).toBe(0);
+    fixture.detectChanges();
+    expect(getTaskCount()).toBe(1);
+    const trashBtn = fixture.debugElement.nativeElement.querySelector('.todo-component__trash-btn');
+
+    //When
+    trashBtn.click();
+    fixture.detectChanges();
+
+    //Then
+    expect(getTaskCount()).toBe(0);
   });
 
   it('Should receive correct emit from listButtons component', () => {
+    //Given
     const childComponent = fixture.debugElement.query(By.directive(MockListButtons));
+    let rootElement = fixture.debugElement.queryAll(By.css('.todo-component--showing-completed'));
+    expect(rootElement.length).toBe(0);
     mockListButtons = childComponent.componentInstance;
+    component.addTask(new Event('click'), dummyTask.text);
     fixture.detectChanges();
-    spyOn(component, 'onButtonClick');
+    expect(getTaskCount()).toBe(1);
+
+    //When
     mockListButtons.onClick();
-    expect(component.onButtonClick).toHaveBeenCalledWith(2);
+    fixture.detectChanges();
+
+    //Then
+    rootElement = fixture.debugElement.queryAll(By.css('.todo-component--showing-completed'));
+    expect(rootElement.length).toBe(1);
   });
 });
