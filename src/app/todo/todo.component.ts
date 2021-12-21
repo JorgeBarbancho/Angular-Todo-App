@@ -3,7 +3,8 @@ import { faList, faTasks, faTh, faTrash } from '@fortawesome/free-solid-svg-icon
 import { ListButton } from '../list-buttons/list-button';
 import { Store } from '@ngrx/store';
 import { addTask, clearAllTasks, removeTask, toggleTask } from '../state/tasks.actions';
-import { selectAllTasks, selectCompletedTasks, selectPendingTasks } from '../state/tasks.selectors';
+import { filterTasks, selectPendingTasks } from '../state/tasks.selectors';
+import { changeFilter } from '../state/task-filter.actions';
 
 @Component({
   selector: 'app-todo',
@@ -16,7 +17,7 @@ export class TodoComponent {
   public readonly faTrash = faTrash;
 
   // State
-  public tasks$ = this.store.select(selectAllTasks);
+  public tasks$ = this.store.select(filterTasks);
   public pendingTasks$ = this.store.select(selectPendingTasks);
   public showWarning: boolean = false;
 
@@ -60,16 +61,6 @@ export class TodoComponent {
       };
     });
 
-    switch (buttonIdx) {
-      case 0:
-        this.tasks$ = this.store.select(selectAllTasks);
-        break;
-      case 1:
-        this.tasks$ = this.store.select(selectCompletedTasks);
-        break;
-      case 2:
-        this.tasks$ = this.store.select(selectPendingTasks);
-        break;
-    }
+    this.store.dispatch(changeFilter({ buttonIdx }));
   }
 }
