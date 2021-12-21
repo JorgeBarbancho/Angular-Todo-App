@@ -28,17 +28,15 @@ describe('ListButtonsComponent', () => {
   });
 
   it('Click should call onClick method', fakeAsync(() => {
-    spyOn(component, 'onClick');
-    let button = fixture.debugElement.nativeElement.querySelector('button');
+    // Given
+    spyOn(component.onButtonClick, 'emit');
+
+    // When
+    const button = fixture.debugElement.nativeElement.querySelector('button');
     button.click();
     tick();
-    fixture.detectChanges();
-    expect(component.onClick).toHaveBeenCalled();
-  }));
 
-  /* it('Show pending button should show pending tasks', () => {
-    expect(component.buttons[2].selected).toBeFalse();
-    component.onClick(component.buttons[2]);
-    expect(component.buttons[2].selected).toBeTrue();
-  });*/
+    // Then
+    expect(component.onButtonClick.emit).toHaveBeenCalledOnceWith(0);
+  }));
 });

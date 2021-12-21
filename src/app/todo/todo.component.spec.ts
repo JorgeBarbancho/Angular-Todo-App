@@ -1,6 +1,6 @@
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { TodoComponent } from './todo.component';
-import { Task } from '../task';
+import { Task } from './task';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
 import { By } from '@angular/platform-browser';
 

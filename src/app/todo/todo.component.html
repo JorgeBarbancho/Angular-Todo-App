@@ -20,14 +20,14 @@
   >
   </app-list-buttons>
   <ul class="todo-component__todo-list">
-    <li *ngFor="let task of tasks">
+    <li *ngFor="let task of tasks | async">
       <label
         class="todo-component__todo-item"
         [ngClass]="{
           'todo-component__todo-item--pending': task.pending,
           'todo-component__todo-item--completed': !task.pending
           }">
-        <input type="checkbox" (click)="toggleTask(task)">
+        <input type="checkbox" (click)="toggleTask(task)" [checked]="!task.pending">
         <div class="todo-component__todo-item-text">{{task.text}}</div>
         <button class="todo-component__trash-btn" (click)="removeTask(task)">
           <fa-icon [icon]="faTrash"></fa-icon>

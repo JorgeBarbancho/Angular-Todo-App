@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 import { faList, faTasks, faTh, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { Task } from '../task';
-import { ListButton } from '../list-button';
+import { Task } from './task';
+import { ListButton } from '../list-buttons/list-button';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { addTask, clearAllTasks, removeTask, toggleTask } from '../state/todo.actions';
 
 @Component({
   selector: 'app-todo',
@@ -13,7 +16,7 @@ export class TodoComponent {
   public readonly faTrash = faTrash;
 
   // State
-  public tasks: Task[] = [];
+  tasks: Observable<Task[]>;
   public showingAll: boolean = true;
   public showingPending: boolean = false;
   public showingCompleted: boolean = false;
@@ -22,6 +25,7 @@ export class TodoComponent {
   // Derived view variables
   public pendingTasksCount: number = 0;
   public pendingTasksText: string = 'tasks';
+  private taskArray: Task[] = [];
 
   // List buttons config
   public buttons: ListButton[] = [
@@ -33,17 +37,22 @@ export class TodoComponent {
   // Internal state
   private idCounter: number = 1;
 
+  constructor(private store: Store<{ tasks: Task[] }>) {
+    this.tasks = store.select('tasks');
+  }
+
   public addTask(e: Event, newTask: string): void {
     e.preventDefault();
     newTask = newTask.trim();
     if (!newTask) {
       this.showWarning = true;
     } else {
-      this.tasks.push({
+      const task = {
         id: this.idCounter,
         pending: true,
         text: newTask,
-      });
+      };
+      this.store.dispatch(addTask({ task }));
       this.idCounter++;
       this.showWarning = false;
       this.updatePendingTasksText();
@@ -51,17 +60,17 @@ export class TodoComponent {
   }
 
   public clearAll(): void {
-    this.tasks = [];
+    this.store.dispatch(clearAllTasks());
     this.updatePendingTasksText();
   }
 
   public toggleTask(task: Task): void {
-    task.pending = !task.pending;
+    this.store.dispatch(toggleTask({ task }));
     this.updatePendingTasksText();
   }
 
   public removeTask(task: Task): void {
-    this.tasks = this.tasks.filter((item) => item.id !== task.id);
+    this.store.dispatch(removeTask({ task }));
     this.updatePendingTasksText();
   }
 
@@ -89,7 +98,8 @@ export class TodoComponent {
   }
 
   private updatePendingTasksText(): void {
-    this.pendingTasksCount = this.tasks.filter((task) => task.pending).length;
+    this.tasks.subscribe((result) => (this.taskArray = result));
+    this.pendingTasksCount = this.taskArray.filter((task) => task.pending).length;
     this.pendingTasksText = this.pendingTasksCount === 1 ? 'task' : 'tasks';
   }
 }

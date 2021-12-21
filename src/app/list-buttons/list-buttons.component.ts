@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ListButton } from '../list-button';
+import { ListButton } from './list-button';
 
 @Component({
   selector: 'app-list-buttons',
