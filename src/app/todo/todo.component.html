@@ -1,11 +1,6 @@
 <div
   class="todo-component"
-  [ngClass]="{
-      'todo-component--input-error': showWarning,
-      'todo-component--showing-all': showingAll,
-      'todo-component--showing-pending': showingPending,
-      'todo-component--showing-completed': showingCompleted
-    }">
+  [ngClass]="{'todo-component--input-error': showWarning}">
   <div>
     <h3 class="todo-component__header">Todo App</h3>
   </div>
@@ -20,23 +15,24 @@
   >
   </app-list-buttons>
   <ul class="todo-component__todo-list">
-    <li *ngFor="let task of tasks | async">
+    <li *ngFor="let task of tasks$ | async">
       <label
         class="todo-component__todo-item"
         [ngClass]="{
           'todo-component__todo-item--pending': task.pending,
           'todo-component__todo-item--completed': !task.pending
           }">
-        <input type="checkbox" (click)="toggleTask(task)" [checked]="!task.pending">
+        <input type="checkbox" (click)="toggleTask(task.id)" [checked]="!task.pending">
         <div class="todo-component__todo-item-text">{{task.text}}</div>
-        <button class="todo-component__trash-btn" (click)="removeTask(task)">
+        <button class="todo-component__trash-btn" (click)="removeTask(task.id)">
           <fa-icon [icon]="faTrash"></fa-icon>
         </button>
       </label>
     </li>
   </ul>
   <div class="todo-component__pending-row">
-    <p class="todo-component__pending-text">You have {{pendingTasksCount}} pending {{pendingTasksText}}</p>
+    <p class="todo-component__pending-text" *ngIf="pendingTasks$ | async as pt">
+      You have {{pt.length}} pending {{pt.length === 1 ? 'task' : 'tasks'}}</p>
     <button class="btn" (click)="clearAll()">Clear All</button>
   </div>
 </div>

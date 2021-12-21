@@ -41,7 +41,7 @@
 }
 
 .todo-component .todo-component__todo-item {
-  display: none;
+  display: flex;
   margin-bottom: 10px;
   padding-left: 20px;
   flex-direction: row;
@@ -49,18 +49,6 @@
   align-items: center;
   background-color: #f2f2f2;
   border-radius: 10px;
-}
-
-.todo-component--showing-all .todo-component__todo-item {
-  display: flex;
-}
-
-.todo-component--showing-completed .todo-component__todo-item--completed {
-  display: flex;
-}
-
-.todo-component--showing-pending .todo-component__todo-item--pending {
-  display: flex;
 }
 
 .todo-component .todo-component__todo-item-text {

@@ -17,7 +17,7 @@ class MockListButtons {
   }
 }
 
-describe('TodoBoardComponent', () => {
+describe('TodoComponent', () => {
   let component: TodoComponent;
   let fixture: ComponentFixture<TodoComponent>;
   let dummyTask: Task;
