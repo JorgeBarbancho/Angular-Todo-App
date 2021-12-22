@@ -3,6 +3,9 @@ import { TodoComponent } from './todo.component';
 import { Task } from './task';
 import { Component, CUSTOM_ELEMENTS_SCHEMA, EventEmitter, Output } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { StoreModule } from '@ngrx/store';
+import { tasksReducer } from '../state/tasks.reducer';
+import { tasksFilterReducer } from '../state/task-filter.reducer';
 
 @Component({
   selector: 'app-list-buttons',
@@ -30,6 +33,7 @@ describe('TodoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TodoComponent, MockListButtons],
+      imports: [StoreModule.forRoot({ tasks: tasksReducer, filter: tasksFilterReducer })],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
@@ -37,7 +41,6 @@ describe('TodoComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(TodoComponent);
     component = fixture.componentInstance;
-    component.tasks = [];
     dummyTask = {
       id: 1,
       pending: true,
@@ -49,7 +52,7 @@ describe('TodoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('Add button should call addTask method', fakeAsync(() => {
+  it('Add button should add a task', fakeAsync(() => {
     //Given
     const btn = fixture.debugElement.nativeElement.querySelector('.btn--add');
     const todoInput = fixture.debugElement.query(By.css('.todo-component__input'));
@@ -64,7 +67,6 @@ describe('TodoComponent', () => {
 
     //Then
     expect(getTaskCount()).toBe(1);
-    expect(component.tasks[0].text).toBe('testValue');
   }));
 
   it('Clear all button clear all tasks', () => {
@@ -79,24 +81,25 @@ describe('TodoComponent', () => {
 
     //Then
     expect(getTaskCount()).toBe(0);
-    expect(component.tasks.length).toBe(0);
   });
 
   it('Checkbox should toggle task completion', () => {
     //Given
     component.addTask(new Event('click'), dummyTask.text);
+    let testTasks: Task[] = [];
+    component.tasks$.subscribe((tasks) => (testTasks = tasks));
     fixture.detectChanges();
     expect(getTaskCount()).toBe(1);
     const checkbox = fixture.debugElement.nativeElement.querySelector('input[type=checkbox]');
-    expect(component.tasks[0].pending).toBeTrue();
+    expect(testTasks[0].pending).toBeTrue();
 
     //When
     checkbox.click();
 
     //Then
-    expect(component.tasks[0].pending).toBeFalse();
+    expect(testTasks[0].pending).toBeFalse();
     checkbox.click();
-    expect(component.tasks[0].pending).toBeTrue();
+    expect(testTasks[0].pending).toBeTrue();
   });
 
   it('Trash button should remove a task', () => {
@@ -117,19 +120,19 @@ describe('TodoComponent', () => {
   it('Should receive correct emit from listButtons component', () => {
     //Given
     const childComponent = fixture.debugElement.query(By.directive(MockListButtons));
-    let rootElement = fixture.debugElement.queryAll(By.css('.todo-component--showing-completed'));
-    expect(rootElement.length).toBe(0);
+    let todoItems = fixture.debugElement.queryAll(By.css('.todo-component__todo-item'));
     mockListButtons = childComponent.componentInstance;
     component.addTask(new Event('click'), dummyTask.text);
     fixture.detectChanges();
     expect(getTaskCount()).toBe(1);
+    expect(todoItems.length).toBe(0);
 
     //When
     mockListButtons.onClick();
     fixture.detectChanges();
 
     //Then
-    rootElement = fixture.debugElement.queryAll(By.css('.todo-component--showing-completed'));
-    expect(rootElement.length).toBe(1);
+    todoItems = fixture.debugElement.queryAll(By.css('.todo-component__todo-item'));
+    expect(todoItems.length).toBe(0);
   });
 });

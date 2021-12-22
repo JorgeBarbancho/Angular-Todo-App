@@ -60,7 +60,6 @@ export class TodoComponent {
         selected: (button.selected = buttonIdx === idx),
       };
     });
-
     this.store.dispatch(changeFilter({ buttonIdx }));
   }
 }
